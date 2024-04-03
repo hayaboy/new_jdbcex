@@ -7,11 +7,12 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TodoDAO {
 
-
-
+    //sql 작동 테스트를 위한 메서드
     public String getTime() throws Exception {
 
         String now = null;
@@ -48,20 +49,52 @@ public class TodoDAO {
         return now;
     }
 
-//   public void insert(TodoVO todoVO) throws Exception {
-//       String sql="insert into tbl_todo(title, dueDate, finished) VALUES (?, ?, ?)";
-//       @Cleanup Connection conn=ConnectionUtil.INSTANCE.getConnection();
-//       @Cleanup PreparedStatement stmt=conn.prepareStatement(sql);
-//
-//        stmt.setString(1, todoVO.getTitle() );
-//        stmt.setDate(2, Date.valueOf(todoVO.getDueDate()));
-//        stmt.setBoolean(3, todoVO.isFinished() );
-//
-//        stmt.executeUpdate();
-//
-//    }
+    //전체 글 목록 조회
+    public List<TodoVO> selectAll() throws Exception{
 
-    //교재 코드
+        List<TodoVO> todoVOList =new ArrayList<>();
+
+        String sql="select  * from tbl_todo";
+        @Cleanup  //  try catch 리소스문을 대체(가독성 향상), @Cleanup이 추가된 변수는 close()가 호출되는 것 보장
+        Connection conn = ConnectionUtil.INSTANCE.getConnection();
+        @Cleanup
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        @Cleanup
+        ResultSet rs = pstmt.executeQuery();
+
+
+        while(rs.next()){
+            TodoVO todoVO=   TodoVO.builder().tno(rs.getLong("tno"))
+                    .title(rs.getString("title"))
+                    .dueDate(rs.getDate("dueDate").toLocalDate())
+                    .finished(rs.getBoolean("finished")).build();
+            todoVOList.add(todoVO);
+        }
+
+        return todoVOList;
+    }
+
+    //글 하나 조회
+    public TodoVO selectOne(Long tno) throws Exception{
+        String sql="select  * from tbl_todo where tno=?";
+        @Cleanup
+        Connection conn = ConnectionUtil.INSTANCE.getConnection();
+        @Cleanup
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        //1번글 설정
+        pstmt.setLong(1, tno );
+        @Cleanup
+        ResultSet rs = pstmt.executeQuery();
+        rs.next();
+        TodoVO todoVO=   TodoVO.builder().tno(rs.getLong("tno"))
+                .title(rs.getString("title"))
+                .dueDate(rs.getDate("dueDate").toLocalDate())
+                .finished(rs.getBoolean("finished")).build();
+
+        return todoVO;
+    }
+
+    //글 목록 추가
     public void insert(TodoVO todoVO) throws Exception {
         String sql = "insert into tbl_todo (title, dueDate, finished) values (?, ?, ?)";
 
@@ -72,6 +105,33 @@ public class TodoDAO {
         preparedStatement.setDate(2, Date.valueOf(todoVO.getDueDate()));
         preparedStatement.setBoolean(3, todoVO.isFinished());
 
+        preparedStatement.executeUpdate();
+
+    }
+
+    //글 수정
+    public void update(TodoVO todoVO) throws Exception {
+        String sql = "update tbl_todo set  tbl_todo.title=?, tbl_todo.finished=?, tbl_todo.dueDate=? where tno=?";
+
+        @Cleanup Connection connection = ConnectionUtil.INSTANCE.getConnection();
+        @Cleanup PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+        preparedStatement.setString(1, todoVO.getTitle());
+        preparedStatement.setBoolean(2, todoVO.isFinished());
+        preparedStatement.setDate(3, Date.valueOf(todoVO.getDueDate()));
+        preparedStatement.setLong(4, todoVO.getTno());
+
+        preparedStatement.executeUpdate();
+
+    }
+
+    //글 삭제
+    public void delete(Long tno) throws Exception {
+        String sql = "delete  from tbl_todo where tno=?";
+
+        @Cleanup Connection connection = ConnectionUtil.INSTANCE.getConnection();
+        @Cleanup PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setLong(1, tno);
         preparedStatement.executeUpdate();
 
     }
