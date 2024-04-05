@@ -29,7 +29,8 @@ public enum TodoService {
     //서비스 계층에서 DTO를 매개변수로 해서 영속 계충으로 등록(연결)
    public void register(TodoDTO todoDTO) throws Exception {
         TodoVO todoVO=modelMapper.map(todoDTO, TodoVO.class);
-       System.out.println("todoVO: " + todoVO);
+//       System.out.println("todoVO: " + todoVO);
+       log.info("todoVO: " + todoVO);
 
        todoDAO.insert(todoVO);
     }
@@ -49,6 +50,38 @@ public enum TodoService {
         return dtoList;
     }
 
+    //글 하나 조회
+    public TodoDTO get(Long tno)throws Exception {
+        log.info("tno: " + tno);
 
+        TodoVO todoVO=todoDAO.selectOne(tno);
+        TodoDTO todoDTO = modelMapper.map(todoVO, TodoDTO.class);
+        return todoDTO;
+    }
+
+
+    //글 하나 수정
+    public void modify(TodoDTO todoDTO)throws Exception {
+
+        log.info("todoDTO: " + todoDTO );
+
+        TodoVO todoVO = modelMapper.map(todoDTO, TodoVO.class);
+
+        todoDAO.update(todoVO);
+
+    }
+
+
+
+    //글 하나 삭제
+    public void remove(Long tno)throws Exception {
+
+        log.info("tno: " + tno );
+
+
+
+        todoDAO.delete(tno);
+
+    }
 
 }

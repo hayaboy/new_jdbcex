@@ -5,19 +5,26 @@
 <head>
     <title>Title</title>
 </head>
-<h1>Todo List</h1>
+<h1>나의 할일</h1>
 <body>
 <%--${todoDTOList}--%>
+
+${loginInfo.mid}님 방가방가
 
 <ul>
     <c:forEach items="${todoDTOList}" var="dto">
         <li>
-            <span><a href="">${dto.tno}</a></span>
+            <span><a href="/jdbcex/todo/read?tno=${dto.tno}">${dto.tno}</a></span>
             <span>${dto.title}</span>
             <span>${dto.dueDate}</span>
             <span>${dto.finished? "DONE": "NOT YET"}</span>
         </li>
     </c:forEach>
 </ul>
+
+
+<form action="/jdbcex/logout" method="post">
+    <button>LOGOUT</button>
+</form>
 </body>
 </html>
