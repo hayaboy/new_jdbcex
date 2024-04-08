@@ -7,7 +7,10 @@
 </head>
 <h1>나의 할일</h1>
 <body>
+
 <%--${todoDTOList}--%>
+
+현재의 Application : ${appName}
 
 ${loginInfo.mid}님 방가방가
 

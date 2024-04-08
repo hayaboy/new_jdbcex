@@ -23,6 +23,8 @@ public enum MemberService {
 
     }
 
+
+    // ID, PW로 로그인
     public MemberDTO login(String mid, String mpw) throws Exception {
 
         MemberVO vo= null;
@@ -36,7 +38,17 @@ public enum MemberService {
     }
 
 
+    //UUID 데이터 추가
+    public void updateUuid(String mid, String uuid) throws Exception{
+        dao.updateUuid(mid, uuid);
+    }
 
 
+    //UUID로 memberVO조회
+    public MemberDTO getByUUID(String uuid) throws Exception{
+        MemberVO vo=dao.selectUUID(uuid);
+        MemberDTO memberDTO=modelMapper.map(vo, MemberDTO.class);
+        return memberDTO;
+    }
 
 }

@@ -37,7 +37,7 @@ public class TodoReadController  extends HttpServlet {
 //                log.info("쿠키 :" + cookie.getName());
 //            }
 
-            //최근 본 글 저장하기위한 사용자 정의 쿠키 구현 후 찾음
+            //최근 본 글 하루동안 저장하기위한 사용자 정의 쿠키 구현 후 찾음
             // 'viewTodos'라는 이름의 쿠키를 찾고, 쿠키의 내용물을 검사한 후에 만일 조회한 적이 없는 번호라면 쿠키의
             //내용물을 갱신해서 브라우저로 보내주는 것, 쿠키를 변경할 때는 다시 경로나 유효시간을 세팅해야 하는 점을 유의해야함
             Cookie viewTodoCookie  =  findCookie(req.getCookies(), "viewTodos");
